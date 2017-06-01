@@ -1,9 +1,9 @@
 import { filter } from 'lodash';
 
 export const trackStats = (hand, library, battlefield, MANA_IN_STARTING_HAND) => {
-    const nonPermNonCreatureSpells_count = filter(hand, { generalType: 'nonPermNonCreatureSpell' }).length;
-    const permNonCreatureSpells_count = filter(hand, { generalType: 'permNonCreatureSpells' }).length;
-    const manaInHand = filter(hand, { generalType: 'Land' }).length;
+    const nonPermNonCreatureSpells_count = filter(hand, { generalType: 'non-perm-non-creature-spell' }).length;
+    const permNonCreatureSpells_count = filter(hand, { generalType: 'perm-non-creature-spell' }).length;
+    const manaInHand = filter(hand, { generalType: 'land' }).length;
 
     console.log(`
         Mana in starting hand: ${MANA_IN_STARTING_HAND} \n

@@ -5,6 +5,8 @@ import _ from 'lodash';
 import xmlParser from 'xml2js';
 import { prepExistingCards } from './prep-existing-cards';
 import { generalType } from './general-type';
+import { abilityInfo } from './ability-info';
+import { spellDamage } from './spell-damage';
 
 const readFile = Promise.promisify(fs.readFile, { context: fs });
 const parser = Promise.promisify(xmlParser.parseString, { context: xmlParser });
@@ -26,10 +28,12 @@ export default async function deckBuilder() {
             const { type } = completeCardObj;
 
             completeCardObj.generalType = generalType(type);
+            completeCardObj.abilityInfo = abilityInfo(completeCardObj);
+            completeCardObj.spellDamage = spellDamage(completeCardObj);
 
             deck.push(completeCardObj);
         }
     });
 
-    return Promise.resolve(deck);
+    return deck;
 };

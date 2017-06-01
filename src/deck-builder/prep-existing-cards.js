@@ -22,13 +22,14 @@ export const prepExistingCards = () => {
                     name: name ? name[0] : null,
                     color: color ? color : null,
                     manacost: manacost ? manacost[0] : null,
-                    cmc: cmc ? cmc[0] : null,
+                    cmc: cmc ? Number(cmc[0]) : null,
                     type: type ? type[0] : null,
                     tablerow: tablerow ? tablerow[0] : null,
                     text: text ? text[0] : null,
                     pt: pt ? pt[0] : null,
                     canUntap: true,
                     tapped: false,
+                    drawn: false,
                 };
             });
         });

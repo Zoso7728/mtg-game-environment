@@ -9,7 +9,7 @@ const hasManaInHand = manaInHand => {
 };
 
 export const playMana = (battlefield, hand, initManaCount) => {
-    const manaInHand = _.filter(hand, { generalType: 'Land' });
+    const manaInHand = _.filter(hand, { generalType: 'land' });
 
     if (hasManaBeenPlayedThisTurn(battlefield, initManaCount) && hasManaInHand(manaInHand)) {
         const manaToPlay = manaInHand[Math.floor(Math.random()*manaInHand.length)];
