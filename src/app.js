@@ -64,7 +64,7 @@ let battlefield = {
         playMana(battlefield, hand, initManaCount);
 
         // check to see if a spell can be played this turn
-        DAMAGE_DEALT += castSpells(hand, battlefield);
+        DAMAGE_DEALT += castSpells(hand, battlefield, DAMAGE_DEALT);
 
         // Start Combat
 
@@ -80,7 +80,7 @@ let battlefield = {
         playMana(battlefield, hand, initManaCount);
 
         // check to see if a spell can be played this turn
-        DAMAGE_DEALT += castSpells(hand, battlefield);
+        // castSpells(hand, battlefield, DAMAGE_DEALT);
 
         // End Step
 
