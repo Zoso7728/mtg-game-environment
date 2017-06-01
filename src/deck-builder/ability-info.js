@@ -13,7 +13,7 @@ const abilities = [
     {
         key: 'Hellbent',
         regex: /Hellbent/,
-        description: 'As long as you have no cards in hand, you may activate a special ability.',
+        notes: 'This card should only be played when there are no cards in hand.',
         fn: hand => {
             if (!hand || !hand.length) return true;
             return false;
@@ -25,7 +25,7 @@ const abilities = [
     {
         key: 'Miracle',
         regex: /Miracle/,
-        description: 'You may cast this card for its miracle cost when you draw it if it\'s the first card you drew this turn.',
+        notes: 'This card is immediately played if drawn.',
         fn: card => {
             if (!card.drawn) return true;
             return false;
@@ -37,14 +37,13 @@ const abilities = [
 ];
 
 export const abilityInfo = card => {
-    if (card.generalType !== 'non-perm-non-creature-spell') return null;
-
     let info = { hasAbility: false };
+    if (card.generalType !== 'non-perm-non-creature-spell') return info;
 
     forEach(abilities, ability => {
-        if (!ability.regex.test(card.text)) return;
+        if (!ability.regex.test(card.text)) return null;
 
-        info = ability;
+        info.ability = ability;
         info.hasAbility = true;
     });
 

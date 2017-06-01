@@ -3,13 +3,13 @@ import async from 'async';
 import _ from 'lodash';
 import Promise from 'bluebird';
 import deckBuilder from './deck-builder/run';
-import { shuffle } from './utils/shuffle';
-import { draw } from './utils/draw';
-import { untap } from './utils/untap';
-import { playMana } from './utils/play-mana';
-import { castSpell } from './utils/cast-spell';
-import { discard } from './utils/discard';
-import { trackStats } from './utils/track-stats';
+import { shuffle } from './game-mechanics/shuffle';
+import { draw } from './game-mechanics/draw';
+import { untap } from './game-mechanics/untap';
+import { playMana } from './game-mechanics/play-mana';
+import { castSpells } from './game-mechanics/cast-spells';
+import { discard } from './game-mechanics/discard';
+import { trackStats } from './game-mechanics/track-stats';
 
 const argv = require('yargs').argv;
 
@@ -23,9 +23,9 @@ if (!NUMBER_OF_TURNS) {
 const turns = Array.from(Array(NUMBER_OF_TURNS + 1).keys());
 
 let MANA_IN_STARTING_HAND;
-let DMG_DEALT = 0;
+let DAMAGE_DEALT = 0;
+let LIFE = 20;
 let hand = [];
-let life = 20;
 let battlefield = {
     nonPermNonCreatureSpells: [],
     permNonCreatureSpells: [],
@@ -37,6 +37,7 @@ let battlefield = {
 
 (async function() {
     const library = await deckBuilder();
+
     Promise.mapSeries(turns, turnId => {
         console.log(`Turn ${turnId}`);
 
@@ -45,7 +46,7 @@ let battlefield = {
             shuffle(library);
             draw(hand, library, 7);
             MANA_IN_STARTING_HAND = _.filter(hand, { generalType: 'land' }).length;
-            trackStats(hand, library, battlefield, MANA_IN_STARTING_HAND);
+            trackStats(hand, library, battlefield, MANA_IN_STARTING_HAND, DAMAGE_DEALT);
             return;
         }
 
@@ -63,10 +64,7 @@ let battlefield = {
         playMana(battlefield, hand, initManaCount);
 
         // check to see if a spell can be played this turn
-
-        playMana(battlefield, hand, initManaCount);
-
-        // check to see if a spell can be played this turn
+        DAMAGE_DEALT += castSpells(hand, battlefield);
 
         // Start Combat
 
@@ -82,17 +80,14 @@ let battlefield = {
         playMana(battlefield, hand, initManaCount);
 
         // check to see if a spell can be played this turn
-
-        playMana(battlefield, hand, initManaCount);
-
-        // check to see if a spell can be played this turn
+        DAMAGE_DEALT += castSpells(hand, battlefield);
 
         // End Step
 
         // TODO These will vary based on different deck strategies.
         if (hand.length > 7) discard(hand, battlefield.graveyard);
 
-        trackStats(hand, library, battlefield, MANA_IN_STARTING_HAND);
+        trackStats(hand, library, battlefield, MANA_IN_STARTING_HAND, DAMAGE_DEALT);
 
         console.log(hand);
         console.log(battlefield);
